@@ -4,9 +4,41 @@ use Mojo::Base 'Mojolicious::Plugin';
 our $VERSION = '0.01';
 
 use File::ShareDir;
+use Mojo::File;
 
 sub register {
     my ( $self, $app ) = @_;
+
+    $app->helper(
+        sharedir => sub {
+            state $sharedir = $self->_build_sharedir($app);
+            return $sharedir;
+        }
+    );
+
+    if ( my $sharedir = $app->sharedir ) {
+        my $templates = $sharedir->child('templates');
+        $app->renderer->paths->[0] = $templates if ( -d $templates );
+
+        my $public = $sharedir->child('public');
+        $app->static->paths->[0] = $public if ( -d $public );
+    }
+}
+
+sub _build_sharedir {
+    my ( $self, $app ) = @_;
+
+    my $local = $app->home->child('share');
+    return $local if ( -d $local );
+
+    my $distname = ref $app;
+    $distname =~ s/::/-/g;
+
+    my $distdir;
+    eval { $distdir = Mojo::File->new( File::ShareDir::dist_dir($distname) ) };
+    return $distdir if ( defined $distdir && -d $distdir );
+
+    return;
 }
 
 1;
