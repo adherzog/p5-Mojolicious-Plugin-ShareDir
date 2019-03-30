@@ -1,8 +1,20 @@
-use strict;
+use Mojo::Base -strict;
 use Test::More;
-use Mojolicious::Plugin::ShareDir;
+use Test::Mojo;
 
-# replace with the actual test
-ok 1;
+{
+    package MyApp;
+    use Mojolicious::Lite;
 
-done_testing;
+    plugin 'ShareDir';
+
+    get '/' => sub {
+        my $c = shift;
+        $c->render( text => 'Hello Mojo!' );
+    };
+}
+
+my $t = Test::Mojo->new('MyApp');
+$t->get_ok('/')->status_is(200)->content_is('Hello Mojo!');
+
+done_testing();

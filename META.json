@@ -1,5 +1,5 @@
 {
-   "abstract" : "Blah blah blah",
+   "abstract" : "Use File::ShareDir paths automatically",
    "author" : [
       "Adam Herzog <adam@adamherzog.com>"
    ],
@@ -37,6 +37,8 @@
       },
       "runtime" : {
          "requires" : {
+            "File::ShareDir" : "0",
+            "Mojolicious" : "0",
             "perl" : "5.008005"
          }
       },
