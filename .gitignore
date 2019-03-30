@@ -1,0 +1,7 @@
+/Mojolicious-Plugin-ShareDir-*
+/.build
+/_build*
+/Build
+MYMETA.*
+!META.json
+/.prove
